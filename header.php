@@ -22,7 +22,7 @@
           rel='stylesheet' type='text/css'>
 
     <!-- Custom styles for this template -->
-    <link href="css/clean-blog.min.css" rel="stylesheet">
+    <link href="css/clean-blog.css" rel="stylesheet">
 
 </head>
 

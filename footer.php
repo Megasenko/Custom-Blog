@@ -1,3 +1,7 @@
+
+
+
+
 <hr>
 <!-- Footer -->
 <footer>
@@ -35,7 +39,6 @@
         </div>
     </div>
 </footer>
-<?php var_dump($_SERVER['REQUEST_URI']);?>
 
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>

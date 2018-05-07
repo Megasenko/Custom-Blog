@@ -1,4 +1,8 @@
 <?php require_once 'header.php' ?>
+<?php //if (!isset ($_SESSION['access']) && !$_SESSION['access'])  {
+//    header('Location: /access_denied.php');
+//    exit;
+//}?>
     <!-- Page Header -->
     <header class="masthead" style="background-image: url('img/about-bg.jpg')">
         <div class="overlay"></div>

@@ -418,3 +418,14 @@ footer .copyright {
   font-size: 16px;
   padding: 25px 35px;
 }
+
+#log{
+  background-color: #6610f2;
+}
+#sign{
+  font-size: 2em;
+}
+#inp{
+  width: 900px;
+  font-size: 6em;
+}

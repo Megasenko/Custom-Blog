@@ -1,3 +1,4 @@
+<?php require_once 'functions.php'?>
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
@@ -16,12 +17,33 @@
                 <li class="nav-item">
                     <a class="nav-link" href="about.php">About</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="post.php">Sample Post</a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="post.php">Sample Post</a>-->
+<!--                </li>-->
                 <li class="nav-item">
                     <a class="nav-link" href="contact.php">Contact</a>
                 </li>
+
+            <?php  if (isset ($_SESSION['adminka']) && $_SESSION['adminka']) { ?>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="adminPanel.php">Admin panel</a>
+                </li>
+
+            <?php  }?>
+
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="signIn.php">Login</a>-->
+<!--                </li>-->
+
+<!--            --><?php // if (!isset ($_SESSION['access']) && !$_SESSION['access']) { ?>
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="/?exit=1">Exit</a>
+                </li>
+
+<!--            --><?php // }?>
+
             </ul>
         </div>
     </div>
