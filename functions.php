@@ -49,7 +49,7 @@ function getUrl()
     $db = connectDb();
     if ($db) {
         $sql = "SELECT *
-            FROM articles 
+            FROM articles
             ";
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -82,7 +82,7 @@ function insertArticle($dataArticle)
 {
     $db = connectDb();
     if ($db) {
-        $sql = "INSERT INTO articles(title , sub_title , content , created_at , url , author) 
+        $sql = "INSERT INTO articles(title , sub_title , content , created_at , url , author)
             VALUES ( :title , :sub_title , :content , :created_at , :url , :author)";
 
         $stmt = $db->prepare($sql);
