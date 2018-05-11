@@ -40,14 +40,28 @@ if (isset($_GET['send']) == 1) {
     <!-- Main Content -->
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="col-lg-8 col-md-12 mx-auto">
                 <div id="dataTable_filter" class="dataTables_filter">
-                    <label>
-                        Search:
-                        <input type="search" class="form-control form-control-sm" placeholder=""
-                               aria-controls="dataTable">
-                    </label>
+                    <div class="row">
+                        <div class="col-lg-8 col-md-10 mx-auto">
+                            <form method="get" action="searchOfArticles.php">
+                                <label class="container-fluid form-control">
+                                    Поиск статьи по вашему запросу:
+                                    <input class="form-control form-control-sm" type="text" name="search">
+                                </label>
+                        </div>
+                        <div class="col-lg-4 col-md-2 mx-auto">
+                            <button style="float: right" class="btn btn-info">Поиск</button>
+                        </div>
+                        </form>
+
+
+                    </div>
+
                 </div>
+            </div>
+
+            <div class="col-lg-8 col-md-12 mx-auto">
                 <?php
                 if (isset ($_SESSION['role']) && $_SESSION['role'] === 1) {
                     $articlesFunction = getArticles();
@@ -88,15 +102,6 @@ if (isset($_GET['send']) == 1) {
                         </div>
                     </div>
                 </div>
-
-
-                <!--                <div class="container">-->
-                <!--                    <a class="btn btn-primary"  href="#">Older Posts &rarr;</a>-->
-                <!--                </div>-->
-                <!--                <br>-->
-                <!--                <div class="container">-->
-                <!--                    <a class="btn btn-primary"  href="#">Older Posts &rarr;</a>-->
-                <!--                </div>-->
             </div>
         </div>
     </div>

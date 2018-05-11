@@ -391,8 +391,15 @@ function getArticlesRole($role)
 }
 
 // поиск статьи по запросу пользователя
-function getArticleByUser()
+function getArticleByUser($search)
 {
-    $title="%$title%";
+    $search = "%$search%";
+    $db = connectDb();
+    if ($db) {
+        $stm = $db->prepare("SELECT * FROM articles WHERE (title LIKE '$search') 
+                              OR (sub_title LIKE '$search') OR (content LIKE '$search')");
+        $stm->execute(array($search));
+        return $stm->fetchAll();
+    }
 
 }
