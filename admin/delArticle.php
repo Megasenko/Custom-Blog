@@ -1,6 +1,6 @@
 <?php
 require_once '../functions.php' ;
-
+require_once '../adminAccess.php';
 if (!isset ($_SESSION['role']) && $_SESSION['role'] !== 1) {
     header('Location:/');
 }

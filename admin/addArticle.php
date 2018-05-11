@@ -1,4 +1,5 @@
 <?php require_once 'header.php';?>
+<?php require_once '../adminAccess.php';?>
 <?php
 if (isset($_POST['add'])) {
     if(insertArticle($_POST)){

@@ -403,3 +403,35 @@ function getArticleByUser($search)
     }
 
 }
+
+// обновление информации о пользователе или установка роли
+function updateRole($userData, $id)
+{
+    $db = connectDb();
+    if ($db) {
+
+        $role = $userData['role'];
+
+        $sql = "UPDATE users SET role=$role WHERE id='$id'";
+
+        return $db->prepare($sql)->execute();
+    }
+    return false;
+
+
+}
+
+// Выбор одного пользователя по id
+function getUser($userData)
+{
+    $db = connectDb();
+    if ($db) {
+        $sql = "SELECT *
+            FROM users WHERE id=:id
+            ";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $userData['id'], PDO::PARAM_STR);
+        $stmt->execute();
+        return $article = $stmt->fetchAll();
+    }
+}

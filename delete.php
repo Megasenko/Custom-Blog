@@ -1,8 +1,7 @@
 <?php require_once 'header.php' ?>
-<?php if (!isset ($_SESSION['adminka']) && !$_SESSION['adminka']) {
-    header('Location: /access_denied.php');
-    exit;
-} ?>
+<?php
+require_once 'adminAccess.php';
+?>
 
     <!-- Page Header -->
     <header class="masthead" style="background-image: url('img/home-bg.jpg')">

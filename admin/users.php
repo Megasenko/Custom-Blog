@@ -1,8 +1,5 @@
 <?php require_once 'header.php' ?>
-<?php
-if (!isset ($_SESSION['role']) && $_SESSION['role'] !== 1) {
-    header('Location:/');
-} ?>
+<?php require_once '../adminAccess.php';?>
     <div class="content-wrapper">
     <div class="container-fluid">
         <!-- Breadcrumbs-->
@@ -34,6 +31,7 @@ if (!isset ($_SESSION['role']) && $_SESSION['role'] !== 1) {
                             <th>Last Name</th>
                             <th>Login</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -44,6 +42,7 @@ if (!isset ($_SESSION['role']) && $_SESSION['role'] !== 1) {
                             <th>Last Name</th>
                             <th>Login</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th>Actions</th>
                         </tr>
                         </tfoot>
@@ -56,8 +55,9 @@ if (!isset ($_SESSION['role']) && $_SESSION['role'] !== 1) {
                                 <td><?= $user['last_name'] ?></td>
                                 <td><?= $user['login'] ?></td>
                                 <td><?= $user['email'] ?></td>
+                                <td><?= $user['role'] ?></td>
                                 <td>
-                                    <a href="javascript:void(0)">Edit</a><br>
+                                    <a href="/admin/updateUser.php?action=update&id=<?= $user['id'] ?>">Edit</a><br>
                                     <a href="/admin/delUser.php?action=del&id=<?= $user['id'] ?>">Delete</a>
                                 </td>
                             </tr>

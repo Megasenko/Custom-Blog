@@ -1,4 +1,5 @@
 <?php require_once 'header.php'; ?>
+<?php require_once '../adminAccess.php';?>
 <?php
 if (!isset ($_SESSION['role']) && $_SESSION['role'] !== 1) {
     header('Location:/');
@@ -30,7 +31,7 @@ if (isset($_POST)) {
                             <div class="form-row">
                                 <div class="col-md-6">
                                     <label class="container">
-                                        Username*:
+                                        User name*:
                                         <br>
                                         <input size="50px" type="text" name="name" value="" class="form-control"
                                                autofocus required>
