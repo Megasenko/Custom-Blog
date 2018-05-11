@@ -1,7 +1,7 @@
 <?php require_once 'header.php' ?>
-<?php if (!isset ($_SESSION['adminka']) && !$_SESSION['adminka']) {
-    header('Location: /access_denied.php');
-    exit;
+<?php
+if (!isset ($_SESSION['role']) && $_SESSION['role'] !== 1) {
+    header('Location:/');
 } ?>
 <?php
 if ($_POST) {

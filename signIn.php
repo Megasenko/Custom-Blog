@@ -58,6 +58,7 @@ if($_POST){
                                 <?php echo getErrorMessage();?>
                             </div>
                         <?php endif; ?>
+                        <?php $_SESSION['error_message'] = false;?>
                         <form class="login100-form validate-form" method="post" action="" charsset="utf8">
 
                             <div class="wrap-input100 validate-input m-b-26" data-validate="Login is required">

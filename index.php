@@ -10,17 +10,29 @@ if (isset($_GET['exit']) == 1) {
     header('Location:signIn.php');
     exit;
 }
-?>
+if (isset($_GET['send']) == 1) {
+    $_SESSION['error_message'] = "Ваше сообщение отправлено на обработку администратору";
+
+} ?>
 
     <!-- Page Header -->
-    <header  class="masthead" style="background-image: url('img/home-bg.jpg') ; margin-top: -80px">
+    <header class="masthead" style="background-image: url('img/home-bg.jpg') ; margin-top: -80px">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
                     <div class="site-heading">
                         <h1>Clean Blog</h1>
+                        <h3>Приветствуем Вас , <?= $_SESSION['name'] ?? $_SESSION['login'] ?>!</h3>
+                        <br><br>
+                        <?php if (getErrorMessage()): ?>
+                            <div class="container-fluid ">
+                                <h4><?php echo getErrorMessage(); ?></h4>
+                            </div>
+                        <?php endif;
+                        $_SESSION['error_message'] = false; ?>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -29,8 +41,21 @@ if (isset($_GET['exit']) == 1) {
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
-                <?php if (getArticles()): ?>
-                    <?php foreach (getArticles() as $article): ?>
+                <div id="dataTable_filter" class="dataTables_filter">
+                    <label>
+                        Search:
+                        <input type="search" class="form-control form-control-sm" placeholder=""
+                               aria-controls="dataTable">
+                    </label>
+                </div>
+                <?php
+                if (isset ($_SESSION['role']) && $_SESSION['role'] === 1) {
+                    $articlesFunction = getArticles();
+                } else {
+                    $articlesFunction = getArticlesRole($_SESSION['role']);
+                } ?>
+                <?php if ($articlesFunction): ?>
+                    <?php foreach ($articlesFunction as $article): ?>
                         <?php $author = getAuthor($article['author']); ?>
                         <div class="post-preview">
                             <a href="post.php?url=<?= $article['url']; ?>">
@@ -53,9 +78,25 @@ if (isset($_GET['exit']) == 1) {
                 <?php endif; ?>
 
                 <!-- Pager -->
-                <div class="clearfix">
-                    <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <a class="btn btn-primary" href="add.php">Add article &rarr;</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-primary" href="#">Older Posts &rarr;</a>
+                        </div>
+                    </div>
                 </div>
+
+
+                <!--                <div class="container">-->
+                <!--                    <a class="btn btn-primary"  href="#">Older Posts &rarr;</a>-->
+                <!--                </div>-->
+                <!--                <br>-->
+                <!--                <div class="container">-->
+                <!--                    <a class="btn btn-primary"  href="#">Older Posts &rarr;</a>-->
+                <!--                </div>-->
             </div>
         </div>
     </div>

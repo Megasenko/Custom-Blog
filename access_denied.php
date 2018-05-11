@@ -10,8 +10,8 @@
                         <h3>
                             <div>
                                 <p class="text-danger">Access Denied!!</p>
-                                <p>Вход на сайт не выполнен</p>
-                                <a class="btn btn-success" href="signIn.php">Войдите на сайт</a>
+                                <p>Здравствуйте Гость, доступ на сайт закрыт , авторизуйтесь пожалуйста!</p>
+                                <a class="btn btn-success" href="signIn.php">Авторизация</a>
                             </div>
                         </h3>
                     </div>

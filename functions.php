@@ -28,6 +28,19 @@ function getArticles()
     }
 }
 
+// Выбор всех пользователей из базы
+function getUsers()
+{
+    $db = connectDb();
+    if ($db) {
+        $sql = "SELECT *
+                FROM users
+                ";
+
+        return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
 // Выбор одной статьи по URL-у
 function getArticle($dataArticle)
 {
@@ -44,7 +57,7 @@ function getArticle($dataArticle)
 }
 
 // Создание URL-а на единицу больше чем в базе для записи в базу
-function getUrl()
+function getUrl1()
 {
     $db = connectDb();
     if ($db) {
@@ -59,6 +72,24 @@ function getUrl()
     }
 
     return false;
+}
+
+// автор для статьи
+function getAuthorArticle()
+{
+    $db = connectDb();
+    if ($db) {
+        $a = $_SESSION['login'];
+        $sql = "SELECT id
+                FROM users
+                WHERE login='$a'
+                ";
+
+        $row = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
+        return $row['id'];
+    }
+
+
 }
 
 // Публикация автора статьи
@@ -82,22 +113,100 @@ function insertArticle($dataArticle)
 {
     $db = connectDb();
     if ($db) {
-        $sql = "INSERT INTO articles(title , sub_title , content , created_at , url , author)
-            VALUES ( :title , :sub_title , :content , :created_at , :url , :author)";
+        $sql = "INSERT INTO articles(title , sub_title , content , created_at , url , author , role)
+            VALUES ( :title , :sub_title , :content , :created_at , :url , :author , :role)";
 
         $stmt = $db->prepare($sql);
+
+
+        $datetime = new DateTime();
+        $createdAt = $datetime->format('Y-m-d H:i:s');
+        $url = getUrl($dataArticle['title']);
+        $author = getAuthorArticle();
+        $role=1;
 
         $stmt->bindValue(':title', strip_tags(trim($dataArticle['title'])), PDO::PARAM_STR);
         $stmt->bindValue(':sub_title', strip_tags(trim($dataArticle['sub_title'])), PDO::PARAM_STR);
         $stmt->bindValue(':content', strip_tags(trim($dataArticle['content'])), PDO::PARAM_STR);
-        $stmt->bindValue(':created_at', strip_tags(trim($dataArticle['created_at'])), PDO::PARAM_INT);
-        $stmt->bindValue(':url', strip_tags(trim($dataArticle['url'])), PDO::PARAM_INT);
-        $stmt->bindValue(':author', strip_tags(trim($dataArticle['author'])), PDO::PARAM_INT);
+        $stmt->bindValue(':created_at', $createdAt, PDO::PARAM_STR);
+        $stmt->bindValue(':url', $url, PDO::PARAM_STR);
+        $stmt->bindValue(':author', $author, PDO::PARAM_STR);
+        $stmt->bindValue(':role', $role, PDO::PARAM_STR);
 
        return $stmt->execute();
-
     }
     return false;
+}
+
+// генерируем URL
+function getUrl($str)
+{
+    $articleUrl = str_replace(' ', '-', $str);
+    $articleUrl = transliteration($articleUrl);
+    $articleIsset = getArticleByUrl($articleUrl);
+    if (!$articleIsset) {
+        return $articleUrl;
+    } else {
+        $url = $articleIsset['url'];
+        $exUrl = explode('-', $url);
+        if ($exUrl) {
+            $temp = (int)end($exUrl);
+            $newUrl = $exUrl[0] . '-' . ++$temp;
+        } else {
+            $temp = 0;
+            $newUrl = $articleUrl . '-' . ++$temp;
+        }
+
+        return getUrl($newUrl);
+    }
+}
+
+// получение статьи по URL
+function getArticleByUrl($str)
+{
+    $db = connectDb();
+    if ($db) {
+        $sql = "SELECT *
+                FROM articles
+                WHERE url='$str'
+                ";
+
+        return $db->query($sql)->fetch(PDO::FETCH_ASSOC);
+    }
+
+    return false;
+}
+
+// перевод тектса
+function transliteration($str)
+{
+    $st = strtr($str,
+        array(
+            'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd',
+            'е' => 'e', 'ё' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i',
+            'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o',
+            'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u',
+            'ф' => 'ph', 'х' => 'h', 'ы' => 'y', 'э' => 'e', 'ь' => '',
+            'ъ' => '', 'й' => 'y', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh',
+            'щ' => 'sh', 'ю' => 'yu', 'я' => 'ya', ' ' => '_', '<' => '_',
+            '>' => '_', '?' => '_', '"' => '_', '=' => '_', '/' => '_',
+            '|' => '_'
+        )
+    );
+    $st2 = strtr($st,
+        array(
+            'А' => 'a', 'Б' => 'b', 'В' => 'v', 'Г' => 'g', 'Д' => 'd',
+            'Е' => 'e', 'Ё' => 'e', 'Ж' => 'zh', 'З' => 'z', 'И' => 'i',
+            'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n', 'О' => 'o',
+            'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
+            'Ф' => 'ph', 'Х' => 'h', 'Ы' => 'y', 'Э' => 'e', 'Ь' => '',
+            'Ъ' => '', 'Й' => 'y', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh',
+            'Щ' => 'sh', 'Ю' => 'yu', 'Я' => 'ya'
+        )
+    );
+    $translit = $st2;
+
+    return $translit;
 }
 
 // Обновление статьи
@@ -105,17 +214,18 @@ function updateArticle($dataArticle, $urlArticle)
 {
     $db = connectDb();
     if ($db) {
-        $title=strip_tags(trim($dataArticle['title']));
-        $sub_title=strip_tags(trim($dataArticle['sub_title']));
-        $content=strip_tags(trim($dataArticle['content']));
-        $created_at=strip_tags(trim($dataArticle['created_at']));
-        $url=strip_tags(trim($dataArticle['url']));
-        $author=strip_tags(trim($dataArticle['author']));
+        $title = strip_tags(trim($dataArticle['title']));
+        $sub_title = strip_tags(trim($dataArticle['sub_title']));
+        $content = strip_tags(trim($dataArticle['content']));
+//        $created_at=strip_tags(trim($dataArticle['created_at']));
+//        $url=strip_tags(trim($dataArticle['url']));
+        $author = getAuthorArticle();
+        $role = strip_tags(trim($dataArticle['role']));
 
         $sql = "UPDATE articles SET title='$title',sub_title='$sub_title',content='$content',
-                created_at='$created_at',url='$url',author='$author' WHERE url='$urlArticle'";
+               author='$author',role=$role WHERE url='$urlArticle'";
 
-       return $db->prepare($sql)->execute();
+        return $db->prepare($sql)->execute();
     }
     return false;
 }
@@ -125,7 +235,7 @@ function deleteArticle($url)
 {
     $db = connectDb();
     if ($db) {
-        $sql = "DELETE FROM articles WHERE url=$url";
+        $sql = "DELETE FROM articles WHERE url='$url'";
 
         return $db->prepare($sql)->execute();
     }
@@ -138,9 +248,10 @@ function insertUser($userData)
 {
     $db = connectDb();
     if ($db) {
+        $role=3;
         $password = md5($userData['password']);
-        $sql = "INSERT INTO users(name, last_name, login , email , password)
-        VALUES ( :name, :last_name , :login , :email , :password)";
+        $sql = "INSERT INTO users(name, last_name, login , email , password, role)
+        VALUES ( :name, :last_name , :login , :email , :password , :role)";
 
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':name', $userData['name'], PDO::PARAM_STR);
@@ -148,6 +259,7 @@ function insertUser($userData)
         $stmt->bindParam(':login', $userData['login'], PDO::PARAM_STR);
         $stmt->bindParam(':email', $userData['email'], PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+        $stmt->bindParam(':role', $role, PDO::PARAM_STR);
         return $stmt->execute();
     }
 }
@@ -176,7 +288,8 @@ function registerUser(array $userData)
 
     if (insertUser($userData)) {
         $_SESSION['error_message'] = false;
-        header('Location: signIn.php');
+        header('Location:/admin/users.php');
+        exit;
     } else {
         $_SESSION['error_message'] = 'Register user not complete';
     }
@@ -189,7 +302,7 @@ function getErrorMessage()
     return $_SESSION['error_message'] ?? false;
 }
 
-// Проверка логина в базе
+// Извлечение пользователя с базы по логину
 function getLogin(array $userData)
 {
     $db = connectDb();
@@ -220,17 +333,22 @@ function auth(array $userData)
         if (count($rows) > 0) {
             if (md5($userData['password']) == $rows[0]['password']) {
                 if ($rows[0]['login'] === 'admin') {
-                    $_SESSION['adminka'] = true;
                     $_SESSION['access'] = true;
+                    $role=$rows[0]['role']*1;
+                    $_SESSION['role'] = $role;
                     $_SESSION['author'] = $rows[0]['id'];
-                    $_SESSION['name'] = $rows[0]['name'];
+                    $_SESSION['login'] = $rows[0]['login'];
                     $_SESSION['email'] = $rows[0]['email'];
-                    header('Location:adminPanel.php');
+                    $_SESSION['name'] = $rows[0]['name'];
+                    header('Location:/admin/main.php');
                     exit;
                 } else {
                     $_SESSION['access'] = true;
+                    $_SESSION['role'] = $rows[0]['role'];
                     $_SESSION['author'] = $rows[0]['id'];
+                    $_SESSION['login'] = $rows[0]['login'];
                     $_SESSION['name'] = $rows[0]['name'];
+                    $_SESSION['email'] = $rows[0]['email'];
                     header('Location:/');
                     exit;
                 }
@@ -247,6 +365,34 @@ function auth(array $userData)
 
 }
 
+// Удаление пользователя
+function deleteUser($id)
+{
+    $db = connectDb();
+    if ($db) {
+        $sql = "DELETE FROM users WHERE id=$id";
 
+        return $db->prepare($sql)->execute();
+    }
 
+    return false;
+}
 
+// вывод статей по роли пользователя
+function getArticlesRole($role)
+{
+    $db = connectDb();
+    if ($db) {
+        $sql = "SELECT *
+                FROM articles WHERE role='$role'";
+
+        return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
+// поиск статьи по запросу пользователя
+function getArticleByUser()
+{
+    $title="%$title%";
+
+}

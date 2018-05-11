@@ -24,11 +24,14 @@
                     <a class="nav-link" href="contact.php">Contact</a>
                 </li>
 
-            <?php  if (isset ($_SESSION['adminka']) && $_SESSION['adminka']) { ?>
+            <?php  if (isset ($_SESSION['role']) && $_SESSION['role'] === 1) { ?>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="adminPanel.php">Admin panel</a>
+                    <a class="nav-link" href="/admin/main.php">Admin panel</a>
                 </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="adminPanel.php">Admin panel2</a>-->
+<!--                </li>-->
 
             <?php  }?>
 
@@ -36,13 +39,13 @@
 <!--                    <a class="nav-link" href="signIn.php">Login</a>-->
 <!--                </li>-->
 
-<!--            --><?php // if (!isset ($_SESSION['access']) && !$_SESSION['access']) { ?>
+            <?php  if (isset ($_SESSION['access']) && $_SESSION['access']) { ?>
 
                   <li class="nav-item">
-                    <a class="nav-link" href="/?exit=1">Exit</a>
+                    <a class="nav-link" href="/?exit=1">Logout</a>
                 </li>
 
-<!--            --><?php // }?>
+            <?php  }?>
 
             </ul>
         </div>
